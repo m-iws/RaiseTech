@@ -10,16 +10,22 @@ Parameters:
     Description: vpc stack name.
     Type: String
     Default: test01
+  EC2KeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: "AWS::EC2::KeyPair::KeyName"
+  MyIP:
+    Description: IP address allowed to access EC2
+    Type: String
     
 Resources: 
 # ------------------------------------------------------------#
 #  SecurityGroup
 # ------------------------------------------------------------#
-  EC2SG:
+  SGEC2:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Sub ${NameBase}-sg-web created
-      GroupName: !Sub ${NameBase}-sg-web
+      GroupDescription: !Sub ${NameBase}-sg-ec2 created
+      GroupName: !Sub ${NameBase}-sg-ec2
       VpcId:
         Fn::ImportValue: !Sub ${StackNameVPC}-VPCID
       SecurityGroupIngress:
@@ -31,39 +37,39 @@ Resources:
           FromPort: 3000
           ToPort: 3000
           CidrIp: 0.0.0.0/0
-        # SSH(MYIPはセキュリティの観点から後で設定する)
+        # SSH(MYIPはセキュリティの観点からハードコードしない)
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
-          CidrIp: 0.0.0.0/0
+          CidrIp: !Ref MyIP
       Tags:
-        - Key: keyname
+        - Key: name
           Value: !Sub ${NameBase}-sg-ec2
 # ------------------------------------------------------------#
 #  EC2Instance
 # ------------------------------------------------------------#
-  myEC2:
+  lecture10EC2:
     Type: AWS::EC2::Instance
     Properties:
-      KeyName: raisetech
+      KeyName: !Ref EC2KeyName
       ImageId: ami-05b37ce701f85f26a
       InstanceType: t2.micro
       NetworkInterfaces: 
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
           GroupSet:
-            - !Ref EC2SG
+            - !Ref SGEC2
           SubnetId:
-            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1
+            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a
       Tags:
-        - Key: keyname
+        - Key: name
           Value: !Sub ${NameBase}-ec2
 Outputs:
-  EC2SG:
-    Value: !Ref EC2SG
+  SGEC2:
+    Value: !Ref SGEC2
     Export:
       Name: !Sub ${AWS::StackName}-sg-ec2
   myEC2:
-    Value: !Ref myEC2
+    Value: !Ref lecture10EC2
     Export:
       Name: !Sub ${AWS::StackName}-ec2

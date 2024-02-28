@@ -11,9 +11,9 @@ Resources:
 # ------------------------------------------------------------#
 #  S3
 # ------------------------------------------------------------#
-  S3BK:
+  lecture10S3:
     Type: AWS::S3::Bucket
-    Properties: 
+    Properties:
       BucketName: s3-lecture10
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
@@ -30,5 +30,5 @@ Resources:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
       Tags:
-        - Key: keyname
+        - Key: name
           Value: !Sub ${NameBase}-s3

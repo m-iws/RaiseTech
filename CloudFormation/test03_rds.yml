@@ -33,8 +33,8 @@ Resources:
       DBSubnetGroupName: !Sub ${NameBase}-subg-rds
       DBSubnetGroupDescription: !Sub ${NameBase}-subg-rds created
       SubnetIds: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1-a
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2-c
 
 # ------------------------------------------------------------#
 #  SecurityGroup
@@ -56,7 +56,7 @@ Resources:
 # ------------------------------------------------------------#
 #  RDS
 # ------------------------------------------------------------#
-  rdsDBInstance:
+  lecture10RDS:
     Type: AWS::RDS::DBInstance
     Properties:
       AvailabilityZone: !Select
@@ -80,6 +80,6 @@ Resources:
 
 Outputs:
   RDSendpoint:
-    Value: !GetAtt rdsDBInstance.Endpoint.Address
+    Value: !GetAtt lecture10RDS.Endpoint.Address
     Export: 
       Name: !Sub ${AWS::StackName}-RDSendpoint

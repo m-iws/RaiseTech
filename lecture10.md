@@ -16,7 +16,7 @@
 
 ### CloudFormationで現在までに作った環境をコード化する
 
-- VPC、Subnet、InternetGateway、RouteTable（test01_vpc）<br>![01_01](l10/01_01.png)<br>![01_02](l10/01_02.png)
+- VPC、Subnet、InternetGateway、RouteTable（test01_vpc）<br>![01](l10/01.png)
 - EC2インスタンス関連（test02_ec2）<br>![02](l10/02.png)
 - RDS関連（test03_rds）<br>![03](l10/03.png)
 - ELB関連（test04_elb）<br>![04](l10/04.png)

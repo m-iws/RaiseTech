@@ -36,12 +36,12 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
       Tags:
-        - Key: keyname
+        - Key: name
           Value: !Sub ${NameBase}-sg-elb
 # ------------------------------------------------------------#
 #  ELB
 # ------------------------------------------------------------#
-  InternetELB: 
+  lecture10ELB: 
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Type: application
@@ -50,8 +50,8 @@ Resources:
       SecurityGroups: 
         - !Ref ELBSecurityGroup
       Subnets: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2-c
 
   ALBTargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
@@ -69,13 +69,13 @@ Resources:
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
       Tags:
-        - Key: keyname
+        - Key: name
           Value: !Sub ${NameBase}-TG
 
   ALBListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties:
-      LoadBalancerArn: !Ref InternetELB
+      LoadBalancerArn: !Ref lecture10ELB
       Port: 80
       Protocol: HTTP
       DefaultActions: 
@@ -84,6 +84,6 @@ Resources:
 
 Outputs:
   ALBendpoint:
-    Value: !GetAtt InternetELB.DNSName
+    Value: !GetAtt lecture10ELB.DNSName
     Export:
       Name: !Sub ${AWS::StackName}-ALBendpoint
