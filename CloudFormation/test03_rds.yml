@@ -27,19 +27,19 @@ Resources:
 # ------------------------------------------------------------#
 #  DBSubnetGroup
 # ------------------------------------------------------------#
-  DBSubnetGroup:
+  lecture10DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupName: !Sub ${NameBase}-subg-rds
       DBSubnetGroupDescription: !Sub ${NameBase}-subg-rds created
       SubnetIds: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1-a
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2-c
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1-a-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2-c-ID
 
 # ------------------------------------------------------------#
 #  SecurityGroup
 # ------------------------------------------------------------#
-  RDSSecurityGroup:
+  lecture10RDSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub ${NameBase}-sg-rds
@@ -51,7 +51,7 @@ Resources:
           FromPort: 3306
           ToPort: 3306
           SourceSecurityGroupId:
-            Fn::ImportValue: !Sub ${StackNameEC2}-sg-ec2
+            Fn::ImportValue: !Sub ${StackNameEC2}-sg-ec2-ID
 
 # ------------------------------------------------------------#
 #  RDS
@@ -65,7 +65,7 @@ Resources:
       AllocatedStorage: 20
       DBInstanceClass: db.t3.micro
       DBInstanceIdentifier: !Sub ${NameBase}-rds
-      DBSubnetGroupName: !Ref DBSubnetGroup
+      DBSubnetGroupName: !Ref lecture10DBSubnetGroup
       Engine: MySQL
       EngineVersion: 8.0.35
       MasterUsername: !Ref DBMasterUserName
@@ -75,11 +75,11 @@ Resources:
       StorageEncrypted: false
       StorageType: gp2
       VPCSecurityGroups:
-        - !Ref RDSSecurityGroup
+        - !Ref lecture10RDSSecurityGroup
       BackupRetentionPeriod: 0
 
 Outputs:
-  RDSendpoint:
+  lecture10RDSendpoint:
     Value: !GetAtt lecture10RDS.Endpoint.Address
     Export: 
-      Name: !Sub ${AWS::StackName}-RDSendpoint
+      Name: !Sub ${AWS::StackName}-RDSendpoint-Address

@@ -21,7 +21,7 @@ Resources:
 # ------------------------------------------------------------#
 #  SecurityGroup
 # ------------------------------------------------------------#
-  SGEC2:
+  lecture10EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub ${NameBase}-sg-ec2 created
@@ -43,7 +43,7 @@ Resources:
           ToPort: 22
           CidrIp: !Ref MyIP
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-sg-ec2
 # ------------------------------------------------------------#
 #  EC2Instance
@@ -58,18 +58,18 @@ Resources:
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
           GroupSet:
-            - !Ref SGEC2
+            - !Ref lecture10EC2SecurityGroup
           SubnetId:
-            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a
+            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a-ID
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-ec2
 Outputs:
-  SGEC2:
-    Value: !Ref SGEC2
+  lecture10EC2SecurityGroup:
+    Value: !Ref lecture10EC2SecurityGroup
     Export:
-      Name: !Sub ${AWS::StackName}-sg-ec2
-  myEC2:
+      Name: !Sub ${AWS::StackName}-sg-ec2-ID
+  lecture10EC2:
     Value: !Ref lecture10EC2
     Export:
-      Name: !Sub ${AWS::StackName}-ec2
+      Name: !Sub ${AWS::StackName}-ec2-ID

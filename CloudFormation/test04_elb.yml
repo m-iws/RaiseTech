@@ -23,7 +23,7 @@ Resources:
 # ------------------------------------------------------------#
 #  ELBSecurityGroup
 # ------------------------------------------------------------#
-  ELBSecurityGroup:
+  lecture10ELBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub ${NameBase}-sg-elb
@@ -36,7 +36,7 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-sg-elb
 # ------------------------------------------------------------#
 #  ELB
@@ -48,15 +48,15 @@ Resources:
       Scheme: internet-facing
       IpAddressType: ipv4
       SecurityGroups: 
-        - !Ref ELBSecurityGroup
+        - !Ref lecture10ELBSecurityGroup
       Subnets: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2-c
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2-c-ID
 
-  ALBTargetGroup:
+  lecture10ALBTargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties:
-      Name: !Sub ${NameBase}-TG
+      Name: !Sub ${NameBase}-TargetGroup
       VpcId:
         Fn::ImportValue: !Sub ${StackNameVPC}-VPCID
       Protocol: HTTP
@@ -65,25 +65,25 @@ Resources:
       TargetType: instance
       Targets: 
         - Id:
-            Fn::ImportValue: !Sub ${StackNameEC2}-ec2
+            Fn::ImportValue: !Sub ${StackNameEC2}-ec2-ID
       HealthCheckPath: /
       HealthCheckProtocol: HTTP
       Tags:
-        - Key: name
-          Value: !Sub ${NameBase}-TG
+        - Key: Name
+          Value: !Sub ${NameBase}-TargetGroup
 
-  ALBListener:
+  lecture10ALBListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties:
       LoadBalancerArn: !Ref lecture10ELB
       Port: 80
       Protocol: HTTP
       DefaultActions: 
-        - TargetGroupArn: !Ref ALBTargetGroup
+        - TargetGroupArn: !Ref lecture10ALBTargetGroup
           Type: forward
 
 Outputs:
-  ALBendpoint:
+  lecture10ALBendpoint:
     Value: !GetAtt lecture10ELB.DNSName
     Export:
-      Name: !Sub ${AWS::StackName}-ALBendpoint
+      Name: !Sub ${AWS::StackName}-ALBendpoint-DNSName

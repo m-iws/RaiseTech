@@ -30,5 +30,5 @@ Resources:
         Rules:
           - ObjectOwnership: BucketOwnerEnforced
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-s3

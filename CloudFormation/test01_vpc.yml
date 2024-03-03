@@ -25,7 +25,7 @@ Resources:
       EnableDnsSupport: true
       EnableDnsHostnames: true
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-vpc
 
 # ------------------------------------------------------------#
@@ -38,7 +38,7 @@ Resources:
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.0.0/20
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-subnet-public1-${AZa}
 
   PublicSubnet2:
@@ -48,7 +48,7 @@ Resources:
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.16.0/20
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-subnet-public2-${AZc}
 
 
@@ -59,7 +59,7 @@ Resources:
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.128.0/20
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-subnet-private1-${AZa}
 
 
@@ -70,7 +70,7 @@ Resources:
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.144.0/20
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-subnet-private2-${AZc}
 # ------------------------------------------------------------#
 #  InternetGateway
@@ -79,7 +79,7 @@ Resources:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
-        - Key: name
+        - Key: Name
           Value:  !Sub ${NameBase}-igw
   lecture10VPCAttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
@@ -95,7 +95,7 @@ Resources:
     Properties:
       VpcId: !Ref lecture10VPC
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-rtb-public
 
   PublicRoute:
@@ -122,14 +122,14 @@ Resources:
     Properties:
       VpcId: !Ref lecture10VPC
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-rtb-private1-${AZa}
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref lecture10VPC
       Tags:
-        - Key: name
+        - Key: Name
           Value: !Sub ${NameBase}-rtb-private1-${AZc}
   PrivateSubnet1Associatio:
     Type: AWS::EC2::SubnetRouteTableAssociation
@@ -144,7 +144,7 @@ Resources:
       RouteTableId: !Ref PrivateRouteTable2
 
 Outputs:
-  VPCID:
+  lecture10VPCID:
     Description: information about VPCID
     Value: !Ref lecture10VPC
     Export: 
@@ -154,21 +154,21 @@ Outputs:
     Description: informarion about publicSubnet1
     Value: !Ref PublicSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet1-a
+      Name: !Sub ${AWS::StackName}-PublicSubnet1-a-ID
 
   PublicSubnet2:
     Description: informarion about publicSubnet2
     Value: !Ref PublicSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet2-c
+      Name: !Sub ${AWS::StackName}-PublicSubnet2-c-ID
 
   PrivateSubnet1:
     Description: informarion about PrivateSubnet1
     Value: !Ref PrivateSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet1-a
+      Name: !Sub ${AWS::StackName}-PrivateSubnet1-a-ID
   PrivateSubnet2:
     Description: informarion about PrivateSubnet2
     Value: !Ref PrivateSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet2-c
+      Name: !Sub ${AWS::StackName}-PrivateSubnet2-c-ID
