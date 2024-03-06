@@ -6,10 +6,10 @@ Parameters:
     Description: this is base name.
     Type: String
     Default: lecture10
-  AZa:
+  AZ1:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-northeast-1a
-  AZc:
+  AZ2:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-northeast-1c
 
@@ -31,47 +31,47 @@ Resources:
 # ------------------------------------------------------------#
 #  Subnet
 # ------------------------------------------------------------#
-  PublicSubnet1:
+  lecture10PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AZa
+      AvailabilityZone: !Ref AZ1
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.0.0/20
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-subnet-public1-${AZa}
+          Value: !Sub ${NameBase}-subnet-public1-${AZ1}
 
-  PublicSubnet2:
+  lecture10PublicSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AZc
+      AvailabilityZone: !Ref AZ2
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.16.0/20
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-subnet-public2-${AZc}
+          Value: !Sub ${NameBase}-subnet-public2-${AZ2}
 
 
-  PrivateSubnet1:
+  lecture10PrivateSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AZa
+      AvailabilityZone: !Ref AZ1
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.128.0/20
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-subnet-private1-${AZa}
+          Value: !Sub ${NameBase}-subnet-private1-${AZ1}
 
 
-  PrivateSubnet2:
+  lecture10PrivateSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      AvailabilityZone: !Ref AZc
+      AvailabilityZone: !Ref AZ2
       VpcId: !Ref lecture10VPC
       CidrBlock: 10.0.144.0/20
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-subnet-private2-${AZc}
+          Value: !Sub ${NameBase}-subnet-private2-${AZ2}
 # ------------------------------------------------------------#
 #  InternetGateway
 # ------------------------------------------------------------#
@@ -90,7 +90,7 @@ Resources:
 # ------------------------------------------------------------#
 #  RouteTable
 # ------------------------------------------------------------#
-  PublicRouteTable:
+  lecture10PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref lecture10VPC
@@ -98,50 +98,50 @@ Resources:
         - Key: Name
           Value: !Sub ${NameBase}-rtb-public
 
-  PublicRoute:
+  lecture10PublicRoute:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId: !Ref PublicRouteTable
+      RouteTableId: !Ref lecture10PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref lecture10VPCIGW
 
-  PublicSubnet1Association:
+  lecture10PublicSubnet1Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet1
-      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref lecture10PublicSubnet1
+      RouteTableId: !Ref lecture10PublicRouteTable
 
-  PublicSubnet2Association:
+  lecture10PublicSubnet2Association:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PublicSubnet2
-      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref lecture10PublicSubnet2
+      RouteTableId: !Ref lecture10PublicRouteTable
 
-  PrivateRouteTable1:
+  lecture10PrivateRouteTable1:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref lecture10VPC
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-rtb-private1-${AZa}
-  PrivateRouteTable2:
+          Value: !Sub ${NameBase}-rtb-private1-${AZ1}
+  lecture10PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
     Properties:
       VpcId: !Ref lecture10VPC
       Tags:
         - Key: Name
-          Value: !Sub ${NameBase}-rtb-private1-${AZc}
-  PrivateSubnet1Associatio:
+          Value: !Sub ${NameBase}-rtb-private1-${AZ2}
+  lecture10PrivateSubnet1Associatio:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet1
-      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref lecture10PrivateSubnet1
+      RouteTableId: !Ref lecture10PrivateRouteTable1
 
-  PrivateSubnet2Associatio:
+  lecture10PrivateSubnet2Associatio:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId: !Ref PrivateSubnet2
-      RouteTableId: !Ref PrivateRouteTable2
+      SubnetId: !Ref lecture10PrivateSubnet2
+      RouteTableId: !Ref lecture10PrivateRouteTable2
 
 Outputs:
   lecture10VPCID:
@@ -150,25 +150,25 @@ Outputs:
     Export: 
       Name: !Sub ${AWS::StackName}-VPCID
 
-  PublicSubnet1:
+  lecture10PublicSubnet1:
     Description: informarion about publicSubnet1
-    Value: !Ref PublicSubnet1
+    Value: !Ref lecture10PublicSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet1-a-ID
+      Name: !Sub ${AWS::StackName}-PublicSubnet1-${AZ1}-ID
 
-  PublicSubnet2:
+  lecture10PublicSubnet2:
     Description: informarion about publicSubnet2
-    Value: !Ref PublicSubnet2
+    Value: !Ref lecture10PublicSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PublicSubnet2-c-ID
+      Name: !Sub ${AWS::StackName}-PublicSubnet2-${AZ2}-ID
 
-  PrivateSubnet1:
+  lecture10PrivateSubnet1:
     Description: informarion about PrivateSubnet1
-    Value: !Ref PrivateSubnet1
+    Value: !Ref lecture10PrivateSubnet1
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet1-a-ID
-  PrivateSubnet2:
+      Name: !Sub ${AWS::StackName}-PrivateSubnet1-${AZ1}-ID
+  lecture10PrivateSubnet2:
     Description: informarion about PrivateSubnet2
-    Value: !Ref PrivateSubnet2
+    Value: !Ref lecture10PrivateSubnet2
     Export:
-      Name: !Sub ${AWS::StackName}-PrivateSubnet2-c-ID
+      Name: !Sub ${AWS::StackName}-PrivateSubnet2-${AZ2}-ID

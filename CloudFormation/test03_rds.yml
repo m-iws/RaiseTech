@@ -22,6 +22,12 @@ Parameters:
     NoEcho: true
     Description: RDS Master User Password
     Type: String
+  AZ1:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1a
+  AZ2:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1c
 
 Resources: 
 # ------------------------------------------------------------#
@@ -33,8 +39,8 @@ Resources:
       DBSubnetGroupName: !Sub ${NameBase}-subg-rds
       DBSubnetGroupDescription: !Sub ${NameBase}-subg-rds created
       SubnetIds: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1-a-ID
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2-c-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet1-${AZ1}-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PrivateSubnet2-${AZ2}-ID
 
 # ------------------------------------------------------------#
 #  SecurityGroup

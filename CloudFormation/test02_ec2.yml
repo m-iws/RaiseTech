@@ -16,6 +16,12 @@ Parameters:
   MyIP:
     Description: IP address allowed to access EC2
     Type: String
+  AZ1:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1a
+  AZ2:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1c
     
 Resources: 
 # ------------------------------------------------------------#
@@ -60,10 +66,42 @@ Resources:
           GroupSet:
             - !Ref lecture10EC2SecurityGroup
           SubnetId:
-            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a-ID
+            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-${AZ1}-ID
+      IamInstanceProfile: !Ref lecture10EC2InstanceProfile
       Tags:
         - Key: Name
           Value: !Sub ${NameBase}-ec2
+
+# ------------------------------------------------------------#
+#  IAMRole
+# ------------------------------------------------------------#
+  lecture10S3AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: / 
+      ManagedPolicyArns:
+           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-S3AccessRole
+
+  lecture10EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref lecture10S3AccessRole
+
 Outputs:
   lecture10EC2SecurityGroup:
     Value: !Ref lecture10EC2SecurityGroup

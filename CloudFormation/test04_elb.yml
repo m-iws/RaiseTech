@@ -17,7 +17,13 @@ Parameters:
   StackNameRDS:
     Description: RDS stack name.
     Type: String
-    Default: test03  
+    Default: test03
+  AZ1:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1a
+  AZ2:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1c
 
 Resources: 
 # ------------------------------------------------------------#
@@ -50,8 +56,8 @@ Resources:
       SecurityGroups: 
         - !Ref lecture10ELBSecurityGroup
       Subnets: 
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-a-ID
-        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2-c-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-${AZ1}-ID
+        - Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet2-${AZ2}-ID
 
   lecture10ALBTargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
