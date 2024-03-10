@@ -19,9 +19,6 @@ Parameters:
   AZ1:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-northeast-1a
-  AZ2:
-    Type: AWS::EC2::AvailabilityZone::Name
-    Default: ap-northeast-1c
     
 Resources: 
 # ------------------------------------------------------------#
