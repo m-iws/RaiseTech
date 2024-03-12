@@ -1,0 +1,110 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: lecture10_ec2_setting
+
+Parameters: 
+  NameBase:
+    Description: this is base name.
+    Type: String
+    Default: lecture10
+  StackNameVPC:
+    Description: vpc stack name.
+    Type: String
+    Default: test01
+  EC2KeyName:
+    Description: The EC2 Key Pair to allow SSH access to the instance
+    Type: "AWS::EC2::KeyPair::KeyName"
+  MyIP:
+    Description: IP address allowed to access EC2
+    Type: String
+  AZ1:
+    Type: AWS::EC2::AvailabilityZone::Name
+    Default: ap-northeast-1a
+    
+Resources: 
+# ------------------------------------------------------------#
+#  SecurityGroup
+# ------------------------------------------------------------#
+  lecture10EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub ${NameBase}-sg-ec2 created
+      GroupName: !Sub ${NameBase}-sg-ec2
+      VpcId:
+        Fn::ImportValue: !Sub ${StackNameVPC}-VPCID
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          CidrIp: 0.0.0.0/0
+        # SSH(MYIPはセキュリティの観点からハードコードしない)
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: !Ref MyIP
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-sg-ec2
+# ------------------------------------------------------------#
+#  EC2Instance
+# ------------------------------------------------------------#
+  lecture10EC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      KeyName: !Ref EC2KeyName
+      ImageId: ami-05b37ce701f85f26a
+      InstanceType: t2.micro
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - !Ref lecture10EC2SecurityGroup
+          SubnetId:
+            Fn::ImportValue: !Sub ${StackNameVPC}-PublicSubnet1-${AZ1}-ID
+      IamInstanceProfile: !Ref lecture10EC2InstanceProfile
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-ec2
+
+# ------------------------------------------------------------#
+#  IAMRole
+# ------------------------------------------------------------#
+  lecture10S3AccessRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement: 
+          - 
+            Effect: Allow
+            Principal: 
+              Service: 
+                - ec2.amazonaws.com
+            Action: 
+              - sts:AssumeRole
+      Path: / 
+      ManagedPolicyArns:
+           - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Tags:
+        - Key: Name
+          Value: !Sub ${NameBase}-S3AccessRole
+
+  lecture10EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+      - !Ref lecture10S3AccessRole
+
+Outputs:
+  lecture10EC2SecurityGroup:
+    Value: !Ref lecture10EC2SecurityGroup
+    Export:
+      Name: !Sub ${AWS::StackName}-sg-ec2-ID
+  lecture10EC2:
+    Value: !Ref lecture10EC2
+    Export:
+      Name: !Sub ${AWS::StackName}-ec2-ID
