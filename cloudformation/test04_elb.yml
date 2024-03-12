@@ -14,10 +14,6 @@ Parameters:
     Description: ec2 stack name.
     Type: String
     Default: test02
-  StackNameRDS:
-    Description: RDS stack name.
-    Type: String
-    Default: test03
   AZ1:
     Type: AWS::EC2::AvailabilityZone::Name
     Default: ap-northeast-1a
