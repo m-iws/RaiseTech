@@ -33,6 +33,11 @@ Raisetechより提供されたCRUD 処理が出来るRailsアプリケーショ�
 - Railsアプリケーションのレスポンスを確認
 
 ---
+## 構成図
+
+![構成図](l13/構成図.png)
+
+---
 
 ## 事前設定
 必要な環境変数はCircleCIの `Environment Variables` に登録しておく。 
